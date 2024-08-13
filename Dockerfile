@@ -35,6 +35,6 @@ EXPOSE 80 3306
 # Инициализация MySQL и запуск сервисов
 CMD service mysql start && \
     mysql -e "CREATE DATABASE IF NOT EXISTS ogame;" && \
-    mysql -e "CREATE USER 'ogame'@'localhost' IDENTIFIED BY 'ogame';" && \
-    mysql -e "GRANT ALL PRIVILEGES ON ogame.* TO 'ogame'@'localhost';" && \
+    mysql -e "CREATE USER 'ogame'@'%' IDENTIFIED BY 'ogame';" && \
+    mysql -e "GRANT ALL PRIVILEGES ON ogame.* TO 'ogame'@'%';" && \
     service php7.4-fpm start && nginx -g 'daemon off;'
