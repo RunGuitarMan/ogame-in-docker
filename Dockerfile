@@ -9,7 +9,7 @@ RUN apt-get update && \
     dpkg-reconfigure --frontend noninteractive tzdata
 
 # Установка необходимых пакетов
-RUN apt-get install -y nginx php-fpm php-gd php-mbstring php-mysql git
+RUN apt-get install -y nginx php-fpm php-gd php-mbstring php-mysql mysql-server git
 
 # Клонирование исходного кода ogame
 RUN git clone https://github.com/ogamespec/ogame-opensource.git /var/www/ogame
@@ -26,8 +26,15 @@ RUN cp -r /var/www/ogame/wwwroot/* /var/www/html/ && \
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY php-fpm.conf /usr/local/etc/php-fpm.d/www.conf
 
-# Открытие порта
-EXPOSE 80
+# Конфигурация MySQL
+COPY my.cnf /etc/mysql/my.cnf
 
-# Запуск Nginx и PHP-FPM
-CMD service php7.4-fpm start && nginx -g 'daemon off;'
+# Открытие портов
+EXPOSE 80 3306
+
+# Инициализация MySQL и запуск сервисов
+CMD service mysql start && \
+    mysql -e "CREATE DATABASE IF NOT EXISTS ogame;" && \
+    mysql -e "CREATE USER 'ogame'@'localhost' IDENTIFIED BY 'ogame';" && \
+    mysql -e "GRANT ALL PRIVILEGES ON ogame.* TO 'ogame'@'localhost';" && \
+    service php7.4-fpm start && nginx -g 'daemon off;'
