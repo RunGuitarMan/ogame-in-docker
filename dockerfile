@@ -19,8 +19,9 @@ RUN apt-get update && apt-get install -y \
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install gd mbstring pdo pdo_mysql
 
-# Создаем необходимые директории для сокета
+# Создаем необходимые директории
 RUN mkdir -p /var/run/php \
+    && mkdir -p /var/www/Universe \
     && chown www-data:www-data /var/run/php \
     && chmod 0775 /var/run/php
 
