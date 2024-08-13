@@ -1,4 +1,4 @@
-# Используйте базовый образ с нужной версией PHP
+# Используем официальный образ PHP-FPM
 FROM php:7.4-fpm
 
 # Устанавливаем необходимые пакеты
@@ -20,7 +20,7 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install gd mbstring pdo pdo_mysql
 
 # Создаем необходимые директории
-RUN mkdir -p /var/www/html /var/www/Universe
+RUN mkdir -p /var/run/php
 
 # Копируем конфигурационные файлы nginx
 COPY nginx/default /etc/nginx/sites-enabled/
