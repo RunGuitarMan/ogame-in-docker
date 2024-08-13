@@ -14,6 +14,9 @@ RUN apt-get install -y nginx php-fpm php-gd php-mbstring php-mysql git
 # Клонирование исходного кода ogame
 RUN git clone https://github.com/ogamespec/ogame-opensource.git /var/www/ogame
 
+# Создание директорий, если они не существуют
+RUN mkdir -p /var/www/html /var/www/Universe
+
 # Копирование исходного кода в нужные директории
 RUN cp -r /var/www/ogame/wwwroot/* /var/www/html/ && \
     cp -r /var/www/ogame/game/* /var/www/Universe/ && \
