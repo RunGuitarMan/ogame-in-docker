@@ -42,11 +42,12 @@ RUN { \
     echo 'variables_order = "EGPCS"'; \
 } > /usr/local/etc/php/conf.d/custom.ini
 
-# Настраиваем PHP-FPM для использования нового порта
-RUN sed -i 's/^listen = .*/listen = 127.0.0.1:9100/' /usr/local/etc/php-fpm.d/www.conf \
+# Настраиваем PHP-FPM для использования UNIX-сокета
+RUN sed -i 's/^listen = .*/listen = \/var\/run\/php\/php7.4-fpm.sock/' /usr/local/etc/php-fpm.d/www.conf \
     && sed -i 's/^;listen.owner = .*/listen.owner = www-data/' /usr/local/etc/php-fpm.d/www.conf \
     && sed -i 's/^;listen.group = .*/listen.group = www-data/' /usr/local/etc/php-fpm.d/www.conf \
     && sed -i 's/^;listen.mode = .*/listen.mode = 0660/' /usr/local/etc/php-fpm.d/www.conf
 
 # Настраиваем команды запуска
+# CMD ["sh", "-c", "service nginx start && php-fpm -D && tail -f /var/log/nginx/error.log"]
 CMD ["sh", "-c", "php-fpm -D && nginx -g 'daemon off;'"]
