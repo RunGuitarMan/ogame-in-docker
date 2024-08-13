@@ -29,13 +29,15 @@ COPY php-fpm.conf /usr/local/etc/php-fpm.d/www.conf
 # Конфигурация MySQL
 COPY my.cnf /etc/mysql/my.cnf
 
+# Задаём переменные окружения для автоматического создания базы данных и пользователя
+ENV MYSQL_DATABASE=ogame \
+    MYSQL_USER=ogame \
+    MYSQL_PASSWORD=ogame \
+    MYSQL_ROOT_PASSWORD=ogame
+
 # Открытие портов
 EXPOSE 80 3306
 
 # Инициализация MySQL и запуск сервисов
-RUN service mysql start && \
-    mysql -e "CREATE DATABASE IF NOT EXISTS ogame;" && \
-    mysql -e "CREATE USER 'ogame'@'%' IDENTIFIED BY 'ogame';" && \
-    mysql -e "GRANT ALL PRIVILEGES ON ogame.* TO 'ogame'@'%';" \
-
-CMD service php7.4-fpm start && nginx -g 'daemon off;'
+CMD service mysql start && \
+    service php7.4-fpm start && nginx -g 'daemon off;'
