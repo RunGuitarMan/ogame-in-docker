@@ -4,3 +4,5 @@
  * nginx 1.18
  * mysql
  * php 7.14 fpm
+
+Исходный код OGame собирается из [этого репозитория](https://github.com/ogamespec/ogame-opensource)
