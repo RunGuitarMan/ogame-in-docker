@@ -16,7 +16,7 @@ RUN cp -r /var/www/ogame/wwwroot/* /var/www/html/ && \
     chown -R www-data:www-data /var/www/html /var/www/Universe
 
 # Настройка конфигураций
-COPY nginx.conf /etc/nginx/nginx.conf
+COPY nginx/nginx.conf /etc/nginx/nginx.conf
 COPY php-fpm.conf /usr/local/etc/php-fpm.d/www.conf
 
 # Открытие порта
