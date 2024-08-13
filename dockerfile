@@ -1,4 +1,4 @@
-# Используем официальный образ PHP-FPM
+# Используем PHP-FPM образ
 FROM php:7.4-fpm
 
 # Устанавливаем необходимые пакеты
@@ -19,10 +19,12 @@ RUN apt-get update && apt-get install -y \
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install gd mbstring pdo pdo_mysql
 
-# Создаем необходимые директории
-RUN mkdir -p /var/www/html /var/www/Universe
+# Создаем необходимые директории для сокета
+RUN mkdir -p /var/run/php \
+    && chown www-data:www-data /var/run/php \
+    && chmod 0775 /var/run/php
 
-# Копируем конфигурационные файлы nginx
+# Копируем конфигурацию Nginx
 COPY nginx/default /etc/nginx/sites-enabled/
 
 # Копируем исходный код игры
@@ -39,5 +41,11 @@ RUN { \
     echo 'variables_order = "EGPCS"'; \
 } > /usr/local/etc/php/conf.d/custom.ini
 
+# Настраиваем PHP-FPM для использования UNIX-сокета
+RUN sed -i 's/^listen = .*/listen = \/var\/run\/php\/php7.4-fpm.sock/' /usr/local/etc/php-fpm.d/www.conf \
+    && sed -i 's/^;listen.owner = .*/listen.owner = www-data/' /usr/local/etc/php-fpm.d/www.conf \
+    && sed -i 's/^;listen.group = .*/listen.group = www-data/' /usr/local/etc/php-fpm.d/www.conf \
+    && sed -i 's/^;listen.mode = .*/listen.mode = 0660/' /usr/local/etc/php-fpm.d/www.conf
+
 # Настраиваем команды запуска
-CMD service nginx start && php-fpm -D && tail -f /var/log/nginx/error.log
+CMD ["sh", "-c", "service nginx start && php-fpm -D && tail -f /var/log/nginx/error.log"]
