@@ -33,7 +33,7 @@ COPY my.cnf /etc/mysql/my.cnf
 ENV MYSQL_DATABASE=ogame \
     MYSQL_USER=ogame \
     MYSQL_PASSWORD=ogame \
-    MYSQL_ROOT_PASSWORD=ogame
+    MYSQL_ROOT_PASSWORD=root_password
 
 # Открытие портов
 EXPOSE 80 3306
