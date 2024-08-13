@@ -15,7 +15,7 @@ RUN apt-get install -y nginx php-fpm php-gd php-mbstring php-mysql mysql-server 
 RUN git clone https://github.com/ogamespec/ogame-opensource.git /app/ogame
 
 # Создание директорий, если они не существуют
-RUN mkdir -p /var/www/html /var/www/Universe
+RUN mkdir -p /var/www/html/game /var/www/Universe
 
 # Копирование исходного кода в нужные директории
 RUN cp -r /app/ogame/wwwroot/* /var/www/html/ && \
@@ -33,8 +33,9 @@ COPY my.cnf /etc/mysql/my.cnf
 EXPOSE 80 3306
 
 # Инициализация MySQL и запуск сервисов
-CMD service mysql start && \
+RUN service mysql start && \
     mysql -e "CREATE DATABASE IF NOT EXISTS ogame;" && \
     mysql -e "CREATE USER 'ogame'@'%' IDENTIFIED BY 'ogame';" && \
-    mysql -e "GRANT ALL PRIVILEGES ON ogame.* TO 'ogame'@'%';" && \
-    service php7.4-fpm start && nginx -g 'daemon off;'
+    mysql -e "GRANT ALL PRIVILEGES ON ogame.* TO 'ogame'@'%';" \
+
+CMD service php7.4-fpm start && nginx -g 'daemon off;'
