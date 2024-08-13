@@ -1,9 +1,15 @@
 # Используем базовый образ
 FROM ubuntu:20.04
 
-# Установка необходимых пакетов
+# Установка временной зоны без интерактивного ввода
+ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && \
-    apt-get install -y nginx php-fpm php-gd php-mbstring php-mysql git
+    apt-get install -y tzdata && \
+    ln -fs /usr/share/zoneinfo/UTC /etc/localtime && \
+    dpkg-reconfigure --frontend noninteractive tzdata
+
+# Установка необходимых пакетов
+RUN apt-get install -y nginx php-fpm php-gd php-mbstring php-mysql git
 
 # Клонирование исходного кода ogame
 RUN git clone https://github.com/ogamespec/ogame-opensource.git /var/www/ogame
