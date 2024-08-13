@@ -25,19 +25,17 @@ RUN cp -r /app/ogame/wwwroot/* /var/www/html/ && \
 # Копирование конфигурационных файлов
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY php-fpm.conf /usr/local/etc/php-fpm.d/www.conf
-
-# Конфигурация MySQL
 COPY my.cnf /etc/mysql/my.cnf
 
-# Задаём переменные окружения для автоматического создания базы данных и пользователя
-ENV MYSQL_DATABASE=ogame \
-    MYSQL_USER=ogame \
-    MYSQL_PASSWORD=ogame \
-    MYSQL_ROOT_PASSWORD=root_password
+# Копирование SQL-скрипта для инициализации
+COPY init.sql /docker-entrypoint-initdb.d/
+
+# Копирование и установка скрипта запуска
+COPY start.sh /usr/local/bin/start.sh
+RUN chmod +x /usr/local/bin/start.sh
 
 # Открытие портов
 EXPOSE 80 3306
 
-# Инициализация MySQL и запуск сервисов
-CMD service mysql start && \
-    service php7.4-fpm start && nginx -g 'daemon off;'
+# Запуск MySQL и других сервисов
+CMD ["/usr/local/bin/start.sh"]
