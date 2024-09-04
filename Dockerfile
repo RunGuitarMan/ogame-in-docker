@@ -35,7 +35,7 @@ COPY start.sh /usr/local/bin/start.sh
 RUN chmod +x /usr/local/bin/start.sh
 
 # Открытие портов
-EXPOSE 80 3306
+EXPOSE 80
 
 # Запуск MySQL и других сервисов
 CMD ["/usr/local/bin/start.sh"]
