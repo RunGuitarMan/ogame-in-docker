@@ -11,6 +11,9 @@ RUN apt-get update && \
 # Установка необходимых пакетов
 RUN apt-get install -y nginx php-fpm php-gd php-mbstring php-mysql mysql-server git
 
+# Копирование замененного файла "Welcome to nginx!"
+COPY index.html /usr/share/nginx/html/index.html
+
 # Клонирование исходного кода ogame
 RUN git clone https://github.com/ogamespec/ogame-opensource.git /app/ogame
 
