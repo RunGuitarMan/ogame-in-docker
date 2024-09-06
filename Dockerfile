@@ -13,6 +13,7 @@ RUN apt-get install -y nginx php-fpm php-gd php-mbstring php-mysql mysql-server 
 
 # Копирование замененного файла "Welcome to nginx!"
 COPY index.html /usr/share/nginx/html/index.html
+COPY index.html /var/www/html/index.nginx-debian.html
 
 # Клонирование исходного кода ogame
 RUN git clone https://github.com/ogamespec/ogame-opensource.git /app/ogame
@@ -38,7 +39,7 @@ COPY start.sh /usr/local/bin/start.sh
 RUN chmod +x /usr/local/bin/start.sh
 
 # Открытие портов
-EXPOSE 80
+EXPOSE 8080
 
 # Запуск MySQL и других сервисов
 CMD ["/usr/local/bin/start.sh"]
